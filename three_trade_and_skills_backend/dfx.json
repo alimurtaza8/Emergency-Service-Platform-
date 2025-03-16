@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "three_trade_and_skills_backend_backend": {
+      "declarations": {
+        "node_compatibility": true
+      },
+      "main": "src/three_trade_and_skills_backend_backend/main.mo",
+      "type": "motoko"
+    },
+    "three_trade_and_skills_backend_frontend": {
+      "dependencies": [
+        "three_trade_and_skills_backend_backend"
+      ],
+      "source": [
+        "src/three_trade_and_skills_backend_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "three_trade_and_skills_backend_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
