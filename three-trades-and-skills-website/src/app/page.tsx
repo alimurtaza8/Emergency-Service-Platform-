@@ -102,11 +102,11 @@ const HeroSection = () => {
           </h1>
           
           <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Link href="/contact" className="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
+            <Link href="/contact-us" className="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
               Get a Quote
             </Link>
-            <Link href="/packages/membership" className="bg-transparent border-2 border-white hover:bg-white hover:text-red-700 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
-              Learn About Memberships
+            <Link href="/packages" className="bg-transparent border-2 border-white hover:bg-white hover:text-red-700 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
+              Learn About Packages
             </Link>
           </div>
         </motion.div>
@@ -434,7 +434,7 @@ const TrustedNeighborsSection = () => {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <Link
-                href="/contact"
+                href="/contact-us"
                 className="inline-block bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-lg transition-colors duration-300 font-medium shadow-md"
               >
                 CONTACT US
