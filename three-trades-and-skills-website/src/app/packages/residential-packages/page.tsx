@@ -15,7 +15,11 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function ResidentialPackagesPage() {
+import Header from '@/components/Header';
+
+
+// export default function ResidentialPackagesPage() {
+const ResidentialPackages = () => {
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
   const router = useRouter();
 
@@ -354,31 +358,12 @@ export default function ResidentialPackagesPage() {
   );
 }
 
-// const ResidentialHero: React.FC = () => {
-//   return (
-//     <div className="flex flex-col justify-center items-center w-full py-12">
-//       {/* Heading */}
-//       <h1 className="text-3xl md:text-5xl font-extrabold text-gray-800 mb-8">
-//         <span className='bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600'>
-//           Residential Packages
-//         </span>
-//       </h1>
-      
-//       {/* Image Section */}
-//       <div className="max-w-4xl w-full">
-//         <figure className="w-full">
-//           <div className="relative w-full" style={{ paddingTop: "40%" }}>
-//             <Image
-//               src="/images/residential-service.jpg" 
-//               alt="Residential Electrical Services"
-//               fill
-//               className="object-cover rounded-lg shadow-lg"
-//               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-//               onError={() => console.error("Image failed to load!")}
-//             />
-//           </div>
-//         </figure>
-//       </div>
-//     </div>
-//   );
-// };
+
+export default function ResidentialPackagesPage() {
+  return (
+    <div>
+      <Header />
+      <ResidentialPackages />
+    </div>
+  )
+}

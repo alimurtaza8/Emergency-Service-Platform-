@@ -1,22 +1,24 @@
 "use client";
 
 import React, { useState } from 'react';
-import Image from "next/image";
+// import Image from "next/image";
 import { 
   Diamond, 
   CheckCircle, 
   ChevronRight, 
   Building2, 
   Clock, 
-  Shield,
   BadgeCheck,
   Gem,
   Sparkles,
   Briefcase
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 
-export default function BusinessPackagesPage() {
+
+// export default function BusinessPackagesPage() {
+const BusinessPackages = () => {
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
   const router = useRouter();
 
@@ -386,3 +388,13 @@ export default function BusinessPackagesPage() {
   );
 }
 
+
+
+export default function BusinessPackagesPage() {
+  return (
+    <div>
+      <Header />
+      <BusinessPackages />
+    </div>
+  )
+}

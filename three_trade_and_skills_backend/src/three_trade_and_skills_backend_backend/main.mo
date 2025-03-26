@@ -1,23 +1,21 @@
 // Import libraries
 import Array "mo:base/Array";
+import Debug "mo:base/Debug";
+import Float "mo:base/Float";
 import HashMap "mo:base/HashMap";
-import Hash "mo:base/Hash";
+import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
+import Nat32 "mo:base/Nat32";
+import Option "mo:base/Option";
 import Principal "mo:base/Principal";
+import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
-import Option "mo:base/Option";
 // import SquarePayment "modules/SquarePayment";
 import SquarePayment "modules/SquarePayment";
 import MappingService "modules/MappingService";
 import NotificationService "modules/NotificationService";
-import Result "mo:base/Result";
-import Int "mo:base/Int";
-import Float "mo:base/Float";
-import Random "mo:base/Random";
-import Nat32 "mo:base/Nat32";
-import Timer "mo:base/Timer";
 // import delay "mo:base/Delay";
 
 
@@ -46,17 +44,28 @@ actor EmergencyServicePlatform {
         tokenId: Text; // Square payment token
     };
 
+    // public type UserProfile = {
+    //     id: Principal;
+    //     name: Text;
+    //     email: Text;
+    //     phone: Text;
+    //     address: Text;
+    //     membershipTier: MembershipTier;
+    //     paymentMethods: [PaymentMethod];
+    //     registrationDate: Time.Time;
+    //     lastUpdated: Time.Time;
+    // };
     public type UserProfile = {
-        id: UserId;
-        name: Text;
-        email: Text;
-        phone: Text;
-        address: Text;
-        membershipTier: MembershipTier;
-        paymentMethods: [PaymentMethod];
-        registrationDate: Time.Time;
-        lastUpdated: Time.Time;
-    };
+    id: Principal;
+    name: Text;
+    email: Text;
+    phone: Text;
+    address: Text;
+    membershipTier: MembershipTier;
+    paymentMethods: [PaymentMethod];
+    registrationDate: Time.Time;
+    lastUpdated: Time.Time;
+  };
 
     public type ServiceProvider = {
         id: Text;
@@ -117,7 +126,9 @@ actor EmergencyServicePlatform {
     private stable var mapDataEntries : [(Text, MapData)] = [];
     private stable var reportEntries : [(Text, Report)] = [];
     
-    private var userProfiles = HashMap.HashMap<UserId, UserProfile>(0, Principal.equal, Principal.hash);
+    // private var userProfiles = HashMap.HashMap<UserId, UserProfile>(0, Principal.equal, Principal.hash);
+    // let userProfiles = HashMap.HashMap<Principal, UserProfile>(10, Principal.equal, Principal.hash);
+    let userProfiles = HashMap.HashMap<Principal, UserProfile>(10, Principal.equal, Principal.hash);
     private var serviceProviders = HashMap.HashMap<Text, ServiceProvider>(0, Text.equal, Text.hash);
     private var emergencyCalls = HashMap.HashMap<Text, EmergencyCall>(0, Text.equal, Text.hash);
     private var mapData = HashMap.HashMap<Text, MapData>(0, Text.equal, Text.hash);
@@ -133,12 +144,12 @@ actor EmergencyServicePlatform {
     };
 
     system func postupgrade() {
-        userProfiles := HashMap.fromIter<UserId, UserProfile>(
-            Iter.fromArray(userProfileEntries), 
-            userProfileEntries.size(), 
-            Principal.equal, 
-            Principal.hash
-        );
+        // userProfiles := HashMap.fromIter<Principal, UserProfile>(
+        //     Iter.fromArray(userProfileEntries), 
+        //     userProfileEntries.size(), 
+        //     Principal.equal, 
+        //     Principal.hash
+        // );
         serviceProviders := HashMap.fromIter<Text, ServiceProvider>(
             Iter.fromArray(serviceProviderEntries), 
             serviceProviderEntries.size(), 
@@ -172,96 +183,423 @@ actor EmergencyServicePlatform {
     };
 
     // User Management Functions
-    public shared(msg) func registerUser(
-        name: Text,
-        email: Text,
-        phone: Text,
-        address: Text,
-        tier: MembershipTier,
-        paymentMethod: PaymentMethod
-    ) : async Result.Result<UserId, Text> {
-        let caller = msg.caller;
+    // public shared(msg) func createUser(
+    //     userProfile: {
+    //         name: Text;
+    //         email: Text;
+    //         phone: Text;
+    //         address: Text;
+    //         membershipTier: MembershipTier;
+    //     }
+    // ) : async Principal {
+    //     let caller = msg.caller;
+    //     let userId = caller;  // In IC, the principal is the user ID
         
-        // Check if user already exists
-        switch (userProfiles.get(caller)) {
-            case (?_) {
-                return #err("User already registered");
-            };
-            case (null) {
-                let now = Time.now();
-                let newUser : UserProfile = {
-                    id = caller;
-                    name = name;
-                    email = email;
-                    phone = phone;
-                    address = address;
-                    membershipTier = tier;
-                    paymentMethods = [paymentMethod];
-                    registrationDate = now;
-                    lastUpdated = now;
-                };
+    //     // Check if user already exists
+    //     switch (userProfiles.get(userId)) {
+    //         case (?_) {
+    //             // User already exists, just return the ID
+    //             return userId;
+    //         };
+    //         case (null) {
+    //             // Create new user profile
+    //             let now = Time.now();
                 
-                userProfiles.put(caller, newUser);
-                return #ok(caller);
+    //             let newProfile : UserProfile = {
+    //                 id = userId;
+    //                 name = userProfile.name;
+    //                 email = userProfile.email;
+    //                 phone = userProfile.phone;
+    //                 address = userProfile.address;
+    //                 membershipTier = userProfile.membershipTier;
+    //                 paymentMethods = [];
+    //                 registrationDate = now;
+    //                 lastUpdated = now;
+    //             };
+                
+    //             userProfiles.put(userId, newProfile);
+                
+    //             // Also initialize payment method if provided
+    //             // This could be extended to handle the payment method in the userProfile parameter
+    //             return userId;
+    //         };
+    //     };
+    // };
+
+    // Updated createUser to take userId as a parameter
+    // public shared func createUser(
+    //     userId: Principal,
+    //     userProfile: {
+    //         name: Text;
+    //         email: Text;
+    //         phone: Text;
+    //         address: Text;
+    //         membershipTier: MembershipTier;
+    //     }
+    // ) : async Principal {
+    //     Debug.print("Creating user: " # Principal.toText(userId));
+    //     switch (userProfiles.get(userId)) {
+    //         case (?_) {
+    //             Debug.print("User already exists: " # Principal.toText(userId));
+    //             return userId;
+    //         };
+    //         case (null) {
+    //             let now = Time.now();
+    //             let newProfile: UserProfile = {
+    //                 id = userId;
+    //                 name = userProfile.name;
+    //                 email = userProfile.email;
+    //                 phone = userProfile.phone;
+    //                 address = userProfile.address;
+    //                 membershipTier = userProfile.membershipTier;
+    //                 paymentMethods = [];
+    //                 registrationDate = now;
+    //                 lastUpdated = now;
+    //             };
+    //             userProfiles.put(userId, newProfile);
+    //             Debug.print("User created: " # Principal.toText(userId));
+    //             return userId;
+    //         };
+    //     };
+    // };
+
+//     public shared func createUser(userId: Principal, userProfile: { name: Text; email: Text; phone: Text; address: Text; membershipTier: MembershipTier }) : async Principal {
+//     Debug.print("Creating user: " # Principal.toText(userId));
+//     switch (userProfiles.get(userId)) {
+//         case (?_) { Debug.print("User already exists"); return userId; };
+//         case (null) {
+//             let now = Time.now();
+//             let newProfile: UserProfile = {
+//                 id = userId;
+//                 name = userProfile.name;
+//                 email = userProfile.email;
+//                 phone = userProfile.phone;
+//                 address = userProfile.address;
+//                 membershipTier = userProfile.membershipTier;
+//                 paymentMethods = [];
+//                 registrationDate = now;
+//                 lastUpdated = now;
+//             };
+//             userProfiles.put(userId, newProfile);
+//             Debug.print("User created: " # Principal.toText(userId));
+//             return userId;
+//         };
+//     };
+// };
+
+
+
+public shared func createUser(
+    userId: Principal,
+    userProfile: {
+      name: Text;
+      email: Text;
+      phone: Text;
+      address: Text;
+      membershipTier: MembershipTier;
+    }
+  ) : async Principal {
+    Debug.print("Creating user: " # Principal.toText(userId));
+    switch (userProfiles.get(userId)) {
+      case (?_) {
+        Debug.print("User already exists: " # Principal.toText(userId));
+        return userId;
+      };
+      case (null) {
+        let now = Time.now();
+        let newProfile: UserProfile = {
+          id = userId;
+          name = userProfile.name;
+          email = userProfile.email;
+          phone = userProfile.phone;
+          address = userProfile.address;
+          membershipTier = userProfile.membershipTier;
+          paymentMethods = [];
+          registrationDate = now;
+          lastUpdated = now;
+        };
+        userProfiles.put(userId, newProfile);
+        Debug.print("User created: " # Principal.toText(userId));
+        return userId;
+      };
+    };
+  };
+
+
+
+    // public query func getUserProfile(userId: Principal) : async ?UserProfile {
+    //     return userProfiles.get(userId);
+    // };
+//     public query func getUserProfile(userId: Principal) : async ?UserProfile {
+//     // Safe null handling
+//     let profile = userProfiles.get(userId);
+    
+//     // Convert to optional explicitly
+//     switch (profile) {
+//         case (?p) ?p;
+//         case null null;
+//     }
+// };
+
+    // public shared(msg) func updateUserProfile(
+    //     userId: Principal,
+    //     profile: {
+    //         name: ?Text;
+    //         email: ?Text;
+    //         phone: ?Text;
+    //         address: ?Text;
+    //         membershipTier: ?MembershipTier;
+    //     }
+    // ) : async Bool {
+    //     let caller = msg.caller;
+        
+    //     // Verify caller is authorized (either the user or an admin)
+    //     if (not Principal.equal(caller, userId) and not isAdmin(caller)) {
+    //         return false;
+    //     };
+        
+    //     // Verify user exists
+    //     switch (userProfiles.get(userId)) {
+    //         case (null) {
+    //             return false;
+    //         };
+    //         case (?existingProfile) {
+    //             // Update profile with new values where provided
+    //             let updatedProfile : UserProfile = {
+    //                 id = existingProfile.id;
+    //                 name = Option.get(profile.name, existingProfile.name);
+    //                 email = Option.get(profile.email, existingProfile.email);
+    //                 phone = Option.get(profile.phone, existingProfile.phone);
+    //                 address = Option.get(profile.address, existingProfile.address);
+    //                 membershipTier = Option.get(profile.membershipTier, existingProfile.membershipTier);
+    //                 paymentMethods = existingProfile.paymentMethods;
+    //                 registrationDate = existingProfile.registrationDate;
+    //                 lastUpdated = Time.now();
+    //             };
+                
+    //             userProfiles.put(userId, updatedProfile);
+    //             return true;
+    //         };
+    //     };
+    // };
+
+    // Updated updateUserProfile to remove authorization check for development
+    // public shared func updateUserProfile(
+    //     userId: Principal,
+    //     profile: {
+    //         name: ?Text;
+    //         email: ?Text;
+    //         phone: ?Text;
+    //         address: ?Text;
+    //         membershipTier: ?MembershipTier;
+    //     }
+    // ) : async Bool {
+    //     Debug.print("Updating user: " # Principal.toText(userId));
+    //     switch (userProfiles.get(userId)) {
+    //         case (null) {
+    //             Debug.print("User not found: " # Principal.toText(userId));
+    //             return false;
+    //         };
+    //         case (?existingProfile) {
+    //             let updatedProfile: UserProfile = {
+    //                 id = existingProfile.id;
+    //                 name = Option.get(profile.name, existingProfile.name);
+    //                 email = Option.get(profile.email, existingProfile.email);
+    //                 phone = Option.get(profile.phone, existingProfile.phone); // Fixed typo
+    //                 address = Option.get(profile.address, existingProfile.address);
+    //                 membershipTier = Option.get(profile.membershipTier, existingProfile.membershipTier);
+    //                 paymentMethods = existingProfile.paymentMethods;
+    //                 registrationDate = existingProfile.registrationDate;
+    //                 lastUpdated = Time.now();
+    //             };
+    //             userProfiles.put(userId, updatedProfile);
+    //             Debug.print("User updated: " # Principal.toText(userId));
+    //             return true;
+    //         };
+    //     };
+    // };
+
+
+    public shared func updateUserProfile(userId: Principal, profile: { name: ?Text; email: ?Text; phone: ?Text; address: ?Text; membershipTier: ?MembershipTier }) : async Bool {
+    Debug.print("Updating user: " # Principal.toText(userId));
+    switch (userProfiles.get(userId)) {
+        case (null) {
+            Debug.print("User not found: " # Principal.toText(userId));
+            return false;
+        };
+        case (?existingProfile) {
+            let updatedProfile: UserProfile = {
+                id = existingProfile.id;
+                name = Option.get(profile.name, existingProfile.name);
+                email = Option.get(profile.email, existingProfile.email);
+                phone = Option.get(profile.phone, existingProfile.phone);
+                address = Option.get(profile.address, existingProfile.address);
+                membershipTier = Option.get(profile.membershipTier, existingProfile.membershipTier);
+                paymentMethods = existingProfile.paymentMethods;
+                registrationDate = existingProfile.registrationDate;
+                lastUpdated = Time.now();
             };
+            userProfiles.put(userId, updatedProfile);
+            Debug.print("User updated: " # Principal.toText(userId));
+            return true;
         };
     };
+};
 
-    public shared(msg) func updateUserProfile(
-        name: ?Text,
-        email: ?Text,
-        phone: ?Text,
-        address: ?Text,
-        tier: ?MembershipTier
-    ) : async Result.Result<(), Text> {
-        let caller = msg.caller;
-        
-        switch (userProfiles.get(caller)) {
+
+
+
+    // In your Motoko canister
+// public shared(msg) func addPaymentMethod(userId: Principal, method: PaymentMethod) : async Bool {
+//   switch (userProfiles.get(userId)) {
+//     case (null) { return false };
+//     case (?user) {
+//       let updated = {
+//         id = user.id;
+//         name = user.name;
+//         email = user.email;
+//         phone = user.phone;
+//         address = user.address;
+//         membershipTier = user.membershipTier;
+//         paymentMethods = Array.append(user.paymentMethods, [method]);
+//         registrationDate = user.registrationDate;
+//         lastUpdated = Time.now();
+//       };
+//       userProfiles.put(userId, updated);
+//       return true;
+//     }
+//   };
+// };
+
+// public shared(msg) func addPaymentMethod(userId: Principal, method: PaymentMethod) : async Bool {
+//   switch (userProfiles.get(userId)) {
+//     case (null) { return false };
+//     case (?user) {
+//       // Check for existing payment method
+//       let existing = Array.find<PaymentMethod>(
+//         user.paymentMethods,
+//         func(m: PaymentMethod) : Bool {
+//           m.lastFourDigits == method.lastFourDigits and
+//           m.cardType == method.cardType
+//         }
+//       );
+
+//       // Update token if exists, else add new
+//       let updatedMethods = switch (existing) {
+//         case (?_) {
+//           // Replace token for existing card
+//           Array.map<PaymentMethod, PaymentMethod>(
+//             user.paymentMethods,
+//             func(m) {
+//               if (m.lastFourDigits == method.lastFourDigits and
+//                   m.cardType == method.cardType) {
+//                 {
+//                   cardType = m.cardType; 
+//                   lastFourDigits = m.lastFourDigits; 
+//                   tokenId = method.tokenId 
+//                 };
+//               } else {
+//                 m;
+//               }
+//             }
+//           )
+//         };
+//         case (null) {
+//           // Add new card
+//           Array.append(user.paymentMethods, [method])
+//         };
+//       };
+
+//       // CORRECTED RECORD UPDATE SYNTAX
+//       let updated : UserProfile = {
+//         id = user.id;
+//         name = user.name;
+//         email = user.email;
+//         phone = user.phone;
+//         address = user.address;
+//         membershipTier = user.membershipTier;
+//         paymentMethods = updatedMethods;
+//         registrationDate = user.registrationDate;
+//         lastUpdated = Time.now();
+//       };
+      
+//       userProfiles.put(userId, updated);
+//       return true;
+//     }
+//   };
+// };
+
+
+
+public shared func addPaymentMethod(userId: Principal, method: PaymentMethod) : async Bool {
+        Debug.print("Adding payment method for user: " # Principal.toText(userId));
+        switch (userProfiles.get(userId)) {
+            case (null) {
+                Debug.print("User not found: " # Principal.toText(userId));
+                return false;
+            };
             case (?user) {
-                let updatedUser : UserProfile = {
+                let updatedMethods = Array.append(user.paymentMethods, [method]);
+                let updated: UserProfile = {
                     id = user.id;
-                    name = Option.get(name, user.name);
-                    email = Option.get(email, user.email);
-                    phone = Option.get(phone, user.phone);
-                    address = Option.get(address, user.address);
-                    membershipTier = Option.get(tier, user.membershipTier);
-                    paymentMethods = user.paymentMethods;
+                    name = user.name;
+                    email = user.email;
+                    phone = user.phone;
+                    address = user.address;
+                    membershipTier = user.membershipTier;
+                    paymentMethods = updatedMethods;
                     registrationDate = user.registrationDate;
                     lastUpdated = Time.now();
                 };
-                
-                userProfiles.put(caller, updatedUser);
-                return #ok();
-            };
-            case (null) {
-                return #err("User not found");
-            };
-        };
-    };
-    
-    public shared(msg) func getUserProfile() : async Result.Result<UserProfile, Text> {
-        let caller = msg.caller;
-        
-        switch (userProfiles.get(caller)) {
-            case (?user) {
-                return #ok(user);
-            };
-            case (null) {
-                return #err("User not found");
+                userProfiles.put(userId, updated);
+                Debug.print("Payment method added for user: " # Principal.toText(userId));
+                return true;
             };
         };
     };
 
+    // public query func getUserProfile(userId: Principal) : async ?UserProfile {
+    //     Debug.print("Querying user: " # Principal.toText(userId));
+    //     return userProfiles.get(userId);
+    // };
+    public query func getUserProfile(userId: Principal) : async ?UserProfile {
+    Debug.print("Querying user: " # Principal.toText(userId));
+    userProfiles.get(userId);
+};
+
+
+
+public shared(msg) func deleteUser(userId: Principal) : async Bool {
+    let caller = msg.caller;
+    
+    // Verify caller is authorized (user themselves or admin)
+    if (not Principal.equal(caller, userId) and not isAdmin(caller)) {
+        return false;
+    };
+    
+    switch (userProfiles.remove(userId)) {
+        case (?_) { true }; // User existed and was removed
+        case null { false }; // User didn't exist
+    };
+};
+
+
     // Emergency Call Functions
     public shared(msg) func initiateEmergencyCall(
+        userId: Principal,
         serviceType: Text,
         description: Text,
         location: Location
     ) : async Result.Result<EmergencyCall, Text> {
         let caller = msg.caller;
         
+        // Verify caller is authorized (either the user or an admin)
+        if (not Principal.equal(caller, userId) and not isAdmin(caller)) {
+            return #err("Unauthorized to initiate call for this user");
+        };
+        
         // Verify user exists
-        switch (userProfiles.get(caller)) {
+        switch (userProfiles.get(userId)) {
             case (null) {
                 return #err("User not registered");
             };
@@ -272,7 +610,7 @@ actor EmergencyServicePlatform {
                 
                 let newCall : EmergencyCall = {
                     id = callId;
-                    userId = caller;
+                    userId = userId;
                     serviceType = serviceType;
                     description = description;
                     location = location;
@@ -285,7 +623,7 @@ actor EmergencyServicePlatform {
                 emergencyCalls.put(callId, newCall);
                 
                 // Process payment (in a real system, this would integrate with Square API)
-                let paymentResult = await processEmergencyPayment(caller, serviceType);
+                let paymentResult = await processEmergencyPayment(userId, serviceType);
                 
                 switch (paymentResult) {
                     case (#ok(paymentId)) {
@@ -669,8 +1007,24 @@ public shared(msg) func calculateRoute(
         };
     };
 
-    public shared(msg) func getServiceProviders() : async [ServiceProvider] {
-        return Iter.toArray(serviceProviders.vals());
+    public query func getServiceProviders(trade: ?Text) : async [ServiceProvider] {
+        let providers = Iter.toArray(serviceProviders.vals());
+        
+        switch(trade) {
+            case (null) {
+                // Return all providers if no trade is specified
+                return providers;
+            };
+            case (?t) {
+                // Filter providers by trade
+                return Array.filter<ServiceProvider>(
+                    providers,
+                    func(provider: ServiceProvider) : Bool {
+                        return provider.trade == t;
+                    }
+                );
+            };
+        };
     };
 
     public shared(msg) func getEmergencyCalls() : async Result.Result<[EmergencyCall], Text> {
@@ -863,6 +1217,119 @@ public shared(msg) func calculateRoute(
                     };
                 };
             };
+        };
+    };
+
+    // Add helper function for admin check
+    private func isAdmin(principal: Principal) : Bool {
+        // In a real system, we'd check against a list of admin principals
+        // For now, just return false unless we implement a proper admin system
+        return false;
+    };
+
+    // Payment Methods Functions
+    // public shared(msg) func addPaymentMethod(
+    //     userId: Principal,
+    //     paymentMethod: PaymentMethod
+    // ) : async Bool {
+    //     let caller = msg.caller;
+        
+    //     // Verify caller is authorized (either the user or an admin)
+    //     if (not Principal.equal(caller, userId) and not isAdmin(caller)) {
+    //         return false;
+    //     };
+        
+    //     // Verify user exists and add payment method
+    //     switch (userProfiles.get(userId)) {
+    //         case (null) {
+    //             return false;
+    //         };
+    //         case (?user) {
+    //             // Add the new payment method to the user's list
+    //             let updatedPaymentMethods = Array.append<PaymentMethod>(user.paymentMethods, [paymentMethod]);
+                
+    //             let updatedUser : UserProfile = {
+    //                 id = user.id;
+    //                 name = user.name;
+    //                 email = user.email;
+    //                 phone = user.phone;
+    //                 address = user.address;
+    //                 membershipTier = user.membershipTier;
+    //                 paymentMethods = updatedPaymentMethods;
+    //                 registrationDate = user.registrationDate;
+    //                 lastUpdated = Time.now();
+    //             };
+                
+    //             userProfiles.put(userId, updatedUser);
+    //             return true;
+    //         };
+    //     };
+    // };
+
+    public query func getUserPaymentMethods(userId: Principal) : async [PaymentMethod] {
+        switch (userProfiles.get(userId)) {
+            case (?user) {
+                return user.paymentMethods;
+            };
+            case (null) {
+                return [];
+            };
+        };
+    };
+
+    public query func getEmergencyCallDetails(callId: Text) : async Result.Result<EmergencyCall, Text> {
+        switch (emergencyCalls.get(callId)) {
+            case (?call) {
+                return #ok(call);
+            };
+            case (null) {
+                return #err("Emergency call not found");
+            };
+        };
+    };
+
+    public query func getUserEmergencyCalls(userId: Principal) : async [EmergencyCall] {
+        // Filter calls by user ID
+        return Array.filter<EmergencyCall>(
+            Iter.toArray(emergencyCalls.vals()),
+            func(call: EmergencyCall) : Bool {
+                return Principal.equal(call.userId, userId);
+            }
+        );
+    };
+
+    public query func getAllEmergencyCalls() : async [EmergencyCall] {
+        return Iter.toArray(emergencyCalls.vals());
+    };
+
+    // System Stats
+    public query func getSystemStats() : async {
+        totalUsers: Nat;
+        totalServiceProviders: Nat;
+        totalEmergencyCalls: Nat;
+        activeEmergencyCalls: Nat;
+        totalPayments: Nat;
+    } {
+        let activeCallCount = Array.foldLeft<EmergencyCall, Nat>(
+            Iter.toArray(emergencyCalls.vals()),
+            0,
+            func(acc: Nat, call: EmergencyCall) : Nat {
+                switch (call.status) {
+                    case (#Initiated) acc + 1;
+                    case (#Processing) acc + 1; 
+                    case (#Assigned) acc + 1;
+                    case (#Completed) acc;
+                    case (#Cancelled) acc;
+                };
+            }
+        );
+        
+        return {
+            totalUsers = Iter.size(userProfiles.entries());
+            totalServiceProviders = Iter.size(serviceProviders.entries());
+            totalEmergencyCalls = Iter.size(emergencyCalls.entries());
+            activeEmergencyCalls = activeCallCount;
+            totalPayments = 0; // In a real implementation, this would be the count of processed payments
         };
     };
 };

@@ -23,7 +23,7 @@ const Footer = () => {
         <div className="flex flex-col items-center mb-16">
           <div className="mb-8 transform hover:scale-105 transition-transform duration-300">
             <Image 
-              src="/logo.svg" 
+              src="/images/logo.jpg" 
               alt="GAC Services Logo" 
               width={160} 
               height={80}
@@ -86,20 +86,20 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/residential-packages" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
+                <Link href="/packages/residential-packages" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
                   <span className="mr-2">›</span> Residential Packages
                 </Link>
               </li>
               <li>
-                <Link href="/commercial-services" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
-                  <span className="mr-2">›</span> Commercial Services
-                </Link>
+                <Link href="/packages/business-packages" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
+                  <span className="mr-2">›</span> Business Packages                 
+                  </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/gallery" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
                   <span className="mr-2">›</span> Project Gallery
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/about-us" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
                   <span className="mr-2">›</span> About Us
@@ -132,7 +132,7 @@ const Footer = () => {
                   <span className="mr-2">›</span> Plumbing
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/services/heat-tape" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
                   <span className="mr-2">›</span> Heat Tape Installation
                 </Link>
@@ -146,7 +146,7 @@ const Footer = () => {
                 <Link href="/services/maintenance" className="text-blue-100 hover:text-white transition duration-300 flex items-center">
                   <span className="mr-2">›</span> Maintenance
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 

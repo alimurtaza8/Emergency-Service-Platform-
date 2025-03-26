@@ -1,9 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBolt, FaFan, FaHome, FaTools, FaArrowRight, FaPhoneAlt } from 'react-icons/fa';
+import { FaBolt, FaFan, FaHome, FaTools, FaArrowRight } from 'react-icons/fa';
+import Header from '@/components/Header';
 
-const ElectricalServicesPage = () => {
+
+const ElectricalServices = () => {
   const services = [
     {
       id: 'general-electric',
@@ -13,7 +15,7 @@ const ElectricalServicesPage = () => {
       image: '/images/electrical-panel.jpg',
       imageAlt: 'Professional electrician working on electrical panel',
       cta: 'CONTACT US',
-      ctaLink: '/contact'
+      ctaLink: '/contact-us'
     },
     {
       id: 'ceiling-fan',
@@ -41,7 +43,7 @@ const ElectricalServicesPage = () => {
       imageAlt: 'Residential electrical panel being serviced',
       additionalText: 'If you are looking to upgrade your home, our team at GAC Services is here to help. We will thoroughly inspect your house and create a plan to make it electrically safe for modern living.',
       cta: 'REQUEST INSPECTION',
-      ctaLink: '/contact'
+      ctaLink: '/contact-us'
     }
   ];
 
@@ -118,7 +120,7 @@ const ElectricalServicesPage = () => {
       </div>
 
       {/* Call to Action Banner */}
-      <div className="bg-blue-800 text-white py-12 mt-16">
+      {/* <div className="bg-blue-800 text-white py-12 mt-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
@@ -134,7 +136,7 @@ const ElectricalServicesPage = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Why Choose Us Section */}
       <div className="container mx-auto px-4 py-16">
@@ -175,4 +177,12 @@ const ElectricalServicesPage = () => {
   );
 };
 
-export default ElectricalServicesPage;
+// export default ElectricalServicesPage;
+export default function ElectricalServicesPage() {
+  return (
+    <div>
+      <Header />
+      <ElectricalServices /> 
+    </div>
+  )
+}

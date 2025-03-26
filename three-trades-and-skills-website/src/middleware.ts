@@ -1,39 +1,39 @@
-// src/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+// // // src/middleware.ts
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  // Get the pathname of the request
-  const path = request.nextUrl.pathname;
+// export function middleware(request: NextRequest) {
+//   // Get the pathname of the request
+//   const path = request.nextUrl.pathname;
   
-  // Define public paths that don't require authentication
-  const isPublicPath = path === '/admin/login';
+//   // Define public paths that don't require authentication
+//   const isPublicPath = path === '/admin/login';
   
-  // Check if path starts with /admin
-  const isAdminPath = path.startsWith('/admin');
+//   // Check if path starts with /admin
+//   const isAdminPath = path.startsWith('/admin/dashboard');
   
-  // Get the token from the request cookies
-  const token = request.cookies.get('admin_session')?.value || '';
+//   // Get the token from the request cookies
+//   const token = request.cookies.get('admin_session')?.value || '';
   
-  // If the path is an admin path (except for login) and there's no token,
-  // redirect to the login page
-  if (isAdminPath && !isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
-  }
+//   // If the path is an admin path (except for login) and there's no token,
+//   // redirect to the login page
+//   if (isAdminPath && !isPublicPath && !token) {
+//     return NextResponse.redirect(new URL('/admin/login', request.url));
+//   }
   
-  // If the user is already logged in and tries to access the login page,
-  // redirect to the dashboard
-  if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-  }
+//   // If the user is already logged in and tries to access the login page,
+//   // redirect to the dashboard
+//   if (isPublicPath && token) {
+//     return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+//   }
   
-  return NextResponse.next();
-}
+//   return NextResponse.next();
+// }
 
-// Configure the middleware to run on specific paths
-export const config = {
-  matcher: ['/admin/:path*']
-};
+// // Configure the middleware to run on specific paths
+// export const config = {
+//   matcher: ['/admin/dashboard/:path*']
+// };
 
 
 
@@ -105,3 +105,149 @@ export const config = {
 // export const config = {
 //   matcher: ['/admin/:path*']
 // };
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////
+
+
+
+// src/middleware.ts (New middleware for authentication)
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// export function middleware(request: NextRequest) {
+//   const adminToken = request.cookies.get('admin_token');
+
+//   // Check if trying to access admin routes
+//   if (request.nextUrl.pathname.startsWith('/admin/dashboard')) {
+//     if (!adminToken) {
+//       // Redirect to login if no token
+//       return NextResponse.redirect(new URL('/admin/login', request.url));
+//     }
+//   }
+
+//   // Continue request if authenticated or not an admin route
+//   return NextResponse.next();
+// }
+
+// export const config = {
+//   matcher: ['/admin/dashboard/:path*']
+// }
+
+
+
+
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// export function middleware(request: NextRequest) {
+//   const adminToken = request.cookies.get('admin_token');
+
+//   // Debugging middleware
+//   console.log('Middleware Checks:');
+//   console.log('Current Path:', request.nextUrl.pathname);
+//   console.log('Admin Token Present:', !!adminToken);
+
+//   // Enhanced route protection
+//   if (request.nextUrl.pathname.startsWith('/admin/dashboard')) {
+//     if (!adminToken) {
+//       console.log('No token: Redirecting to login');
+//       return NextResponse.redirect(new URL('/admin/login', request.url));
+//     }
+//   }
+
+//   return NextResponse.next();
+// }
+
+// export const config = {
+//   matcher: ['/admin/dashboard']
+// }
+
+
+
+// // src/middleware.ts
+// import { NextResponse } from 'next/server';
+// import type { NextRequest } from 'next/server';
+
+// export function middleware(request: NextRequest) {
+//   const adminToken = request.cookies.get('admin_token');
+
+//   // Strict authentication check for dashboard routes
+//   if (request.nextUrl.pathname.startsWith('/admin/dashboard')) {
+//     if (!adminToken || !isValidToken(adminToken.value)) {
+//       console.log('Middleware: Redirecting to login due to invalid token');
+//       return NextResponse.redirect(new URL('/admin/login', request.url));
+//     }
+//   }
+
+//   return NextResponse.next();
+// }
+
+
+// // Token validation function
+// function isValidToken(token: string): boolean {
+//   // Implement more robust token validation
+//   return token.startsWith('admin_') && token.length > 10;
+// }
+
+// export const config = {
+//   matcher: ['/admin/dashboard']
+// }
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////
+
+
+// src/middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  // Get the pathname of the request
+  const path = request.nextUrl.pathname;
+  
+  // Define public paths that don't require authentication
+  const isPublicPath = path === '/admin/login';
+  
+  // Check if path starts with /admin
+  const isAdminPath = path.startsWith('/admin');
+  
+  // Get the token from the request cookies
+  // const token = request.cookies.get('admin_session')?.value || '';
+  const token = request.cookies.get('admin_session')?.value || '';
+
+  
+  // If the path is an admin path (except for login) and there's no token,
+  // redirect to the login page
+  if (isAdminPath && !isPublicPath && !token) {
+    return NextResponse.redirect(new URL('/admin/login', request.url));
+  }
+  
+  // If the user is already logged in and tries to access the login page,
+  // redirect to the dashboard
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+  }
+  
+  return NextResponse.next();
+}
+
+// Configure the middleware to run on specific paths
+export const config = {
+  matcher: ['/admin/:path*']
+};

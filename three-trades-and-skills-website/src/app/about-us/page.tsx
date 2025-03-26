@@ -2,8 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaMedal, FaUsers, FaTools, FaShieldAlt, FaBolt, FaCertificate } from 'react-icons/fa';
+import Header from '@/components/Header';
 
-const AboutUsPage = () => {
+
+const AboutUs = () => {
   const stats = [
     { value: '20+', label: 'Years Experience', icon: <FaMedal className="text-blue-600" /> },
     { value: '500+', label: 'Projects Completed', icon: <FaBolt className="text-blue-600" /> },
@@ -51,7 +53,7 @@ const AboutUsPage = () => {
         <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">About Our Company</h1>
           <div className="w-20 h-1 bg-blue-500 mb-8"></div>
-          <p className="text-xl text-white max-w-2xl">Summit County's trusted contractors since 2003. Excellence in residential, commercial, and industrial services.</p>
+          <p className="text-xl text-white max-w-2xl">Summit County&apos;s trusted contractors since 2003. Excellence in residential, commercial, and industrial services.</p>
         </div>
       </div>
 
@@ -73,7 +75,7 @@ const AboutUsPage = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Story</h2>
+              <h2 className="text-4xl font-bold text-blue-800 mb-6">Our Story</h2>
               <div className="w-16 h-1 bg-blue-600 mb-8"></div>
               <p className="text-gray-700 leading-relaxed mb-6">
                 With over 20 years of dedicated service, our company has established itself as a leader in the electrical contracting industry in Summit County. As a fully licensed and insured business, we specialize in delivering comprehensive electrical services across various sectors, including residential, commercial, and industrial. Our team is committed to providing high-quality, reliable solutions tailored to meet the unique needs of each client.
@@ -115,7 +117,7 @@ const AboutUsPage = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Our Core Values</h2>
+            <h2 className="text-3xl font-bold text-blue-800 mb-4">Our Core Values</h2>
             <div className="w-16 h-1 bg-blue-600 mx-auto mb-8"></div>
             <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
               These principles guide everything we do, from how we interact with clients to the quality of our workmanship.
@@ -223,22 +225,22 @@ const AboutUsPage = () => {
       </section> */}
 
       {/* Call to Action */}
-      <section className="py-20 bg-blue-900 text-white">
+      <section className="py-20 bg-white text-blue-900">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Work With Summit County's Premier Electrical Contractor?</h2>
-          <p className="max-w-2xl mx-auto mb-8 text-blue-100">
+          <h2 className="text-3xl font-bold mb-6 ">Ready to Work With Summit County&apos;s Premier Electrical Contractor?</h2>
+          <p className="max-w-2xl mx-auto mb-8 text-gray-600">
             Contact us today to discuss your electrical project needs. Our team is ready to provide expert guidance and solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/contact" 
-              className="bg-white text-blue-900 hover:bg-blue-100 font-medium py-3 px-8 rounded-md transition duration-300"
+              href="/contact-us" 
+              className="bg-blue-900 text-white hover:text-blue hover:bg-blue-500 font-medium py-3 px-8 rounded-md transition duration-300"
             >
               Contact Us
             </Link>
             <Link 
               href="/services" 
-              className="border border-white text-white hover:bg-white/10 font-medium py-3 px-8 rounded-md transition duration-300"
+              className="bg-blue-900 text-white hover:text-blue hover:bg-blue-500 font-medium py-3 px-8 rounded-md transition duration-300"
             >
               Explore Services
             </Link>
@@ -249,4 +251,12 @@ const AboutUsPage = () => {
   );
 };
 
-export default AboutUsPage;
+// export default AboutUsPage;
+export default function AboutUsPage(){
+  return (
+    <div>
+      <Header />
+      <AboutUs />
+    </div>
+  )
+}

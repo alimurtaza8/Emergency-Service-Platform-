@@ -9,14 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dfinity/agent": "^2.4.0",
+    "@dfinity/auth-client": "^2.3.0",
+    "@dfinity/candid": "^2.4.0",
+    "@dfinity/principal": "^2.3.0",
+    "@emailjs/browser": "^4.4.1",
+    "@headlessui/react": "^2.2.0",
     "framer-motion": "^12.5.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.483.0",
-    "next": "14.2.15",
+    "next": "^14.2.25",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^4.2.1",
+    "square": "^42.0.0"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wrench, Fan, Droplet } from 'lucide-react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+// import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 
 
 // Define hero images
@@ -219,7 +219,7 @@ const PackagesSection = () => {
                 </li>
               </ul>
               <div className="text-center">
-                <Link href="/packages/business" className="inline-block bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
+                <Link href="/packages/business-packages" className="inline-block bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
                   View Business Packages
                 </Link>
               </div>
@@ -274,7 +274,7 @@ const PackagesSection = () => {
                 </li>
               </ul>
               <div className="text-center">
-                <Link href="/packages/residential" className="inline-block bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
+                <Link href="/packages/residential-packages" className="inline-block bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105">
                   View Residential Packages
                 </Link>
               </div>
@@ -320,7 +320,7 @@ const AboutUsSection = () => {
           </p>
           <div className="flex justify-center">
             <Link 
-              href="/about"
+              href="/about-us"
               className="border-2 border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white px-8 py-2 rounded transition-colors duration-300 font-medium"
             >
               VIEW MORE
@@ -427,7 +427,7 @@ const TrustedNeighborsSection = () => {
               TRUSTED BY YOUR NEIGHBORS IN SUMMIT COUNTY, COLORADO
             </h2>
             <p className="text-gray-700 mb-6 leading-relaxed">
-              If you're looking for HVAC, electrical, or plumbing work, GAC Services can meet your needs. Our family-owned and operated company has been serving Summit County, Colorado for over 30 years. We care about our customers and want to keep them comfortable by providing professional, honest, reliable, and valuable indoor comfort and energy solutions.
+              If you&apos;re looking for HVAC, electrical, or plumbing work, GAC Services can meet your needs. Our family-owned and operated company has been serving Summit County, Colorado for over 30 years. We care about our customers and want to keep them comfortable by providing professional, honest, reliable, and valuable indoor comfort and energy solutions.
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -488,7 +488,7 @@ const TrustedNeighborsSection = () => {
               WHY CHOOSE GAC?
             </h2>
             <p className="text-gray-700 mb-6 leading-relaxed">
-              "What do our customers want?" It's a question that drives the way we do business every day. We strive to be more than just an HVAC and electrical contractor—our goal is to improve people's lives through better comfort, enhanced efficiency, and greater reliability. We are proudly setting new standards in the Aether Electric and Summit County Colorado and electrical market one home at a time! Consider the many reasons why your neighbors love working with GAC:
+            &quot;What do our customers want?&quot; It&apos;s a question that drives the way we do business every day. We strive to be more than just an HVAC and electrical contractor—our goal is to improve people&apos;s lives through better comfort, enhanced efficiency, and greater reliability. We are proudly setting new standards in the Aether Electric and Summit County Colorado and electrical market one home at a time! Consider the many reasons why your neighbors love working with GAC:
             </p>
             
             <motion.ul 
@@ -517,15 +517,327 @@ const TrustedNeighborsSection = () => {
 };
 
 
-export default function Home() {
+
+// Define the structure of each step
+interface Step {
+  title: string;
+  description: string;
+}
+
+// Define the steps in the user flow
+const steps: Step[] = [
+  {
+    title: 'Visit the Website',
+    description: 'Start by visiting our homepage to explore our services.',
+  },
+  {
+    title: 'Choose a Plan',
+    description: 'Browse through our available plans and select the one that best fits your needs.',
+  },
+  {
+    title: 'Purchase the Plan',
+    description: 'Complete the purchase through our secure checkout process.',
+  },
+  {
+    title: 'Authenticate with ICP',
+    description: 'Log in using Internet Computer Protocol (ICP) for secure and decentralized access.',
+  },
+  {
+    title: 'Access Your Dashboard',
+    description: 'View your plan details, manage your account, and access exclusive features.',
+  },
+];
+
+// Functional component to display the user flow
+const UserFlowGuide = () => {
+  return (
+    <div className="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      {/* <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-8">How It Works</h2>*/}
+      {/* <h2 className="text-4xl md:text-5xl font-bold text-blue-800 mb-6 relative inline-block">
+            HOW IT WORKS
+            <div className="absolute left-0 right-0 h-1 bg-blue-800 bottom-0 transform translate-y-6"></div>
+          </h2> */}
+        <div className="mb-16 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-800 mb-6 relative inline-block">
+            HOW IT WORKS
+            <div className="absolute left-0 right-0 h-1 bg-blue-800 bottom-0 transform translate-y-6"></div>
+          </h2>
+          {/* <p className="text-gray-700 text-lg max-w-2xl mx-auto mt-8">
+            Choose from our comprehensive range of service packages designed to meet your specific needs, whether for business or residential properties.
+          </p> */}
+        </div>
+      <div className="space-y-8">
+        {steps.map((step, index) => (
+          <div key={index} className="flex items-start">
+            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
+              {index + 1}
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-gray-900">{step.title}</h3>
+              <p className="mt-1 text-gray-600">{step.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
+export default function HomePage() {
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <HeroSection />
       <PackagesSection />
-      <AboutUsSection /> 
+      <UserFlowGuide />
+      {/* {/* <TestimonialsSection /> */}
+      <AboutUsSection />
       <TrustedNeighborsSection />
-      {/* <Footer /> */}
     </div>
   )
 }
+
+
+// export default function HomePage() {
+//   const router = useRouter();
+//   const [isLoading, setIsLoading] = useState(false);
+  
+//   const handleLogin = (e: React.MouseEvent) => {
+//     e.preventDefault();
+//     setIsLoading(true);
+    
+//     // Redirect to login page
+//     router.push('/login');
+//   };
+  
+//   const handleSignup = (e: React.MouseEvent) => {
+//     e.preventDefault();
+//     setIsLoading(true);
+    
+//     // Redirect to signup page
+//     router.push('/register');
+//   };
+  
+//   const handleEmergency = (e: React.MouseEvent) => {
+//     e.preventDefault();
+//     setIsLoading(true);
+    
+//     // For demo purposes, we'll log in as a user and redirect to emergency page
+//     fetch('/api/auth/login', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         username: 'user@test.com',
+//         password: 'user123',
+//       }),
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.success) {
+//           router.push('/emergency/request');
+//         } else {
+//           console.error('Login failed');
+//           setIsLoading(false);
+//         }
+//       })
+//       .catch(error => {
+//         console.error('Error:', error);
+//         setIsLoading(false);
+//       });
+//   };
+  
+//   return (
+//     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//         {/* Header */}
+//         <header className="pt-6 pb-4">
+//           <nav className="flex items-center justify-between">
+//             <div className="flex items-center">
+//               <div className="text-2xl font-bold text-blue-800">Three Trades & Skills</div>
+//             </div>
+//             <div className="flex items-center space-x-4">
+//               <button
+//                 onClick={handleLogin}
+//                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+//               >
+//                 Log In
+//               </button>
+//               <button
+//                 onClick={handleSignup}
+//                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+//               >
+//                 Sign Up
+//               </button>
+//             </div>
+//           </nav>
+//         </header>
+        
+//         {/* Hero Section */}
+//         <main>
+//           <div className="py-12 md:py-20">
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+//               <div className="flex flex-col justify-center">
+//                 <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+//                   Emergency Services on the Blockchain
+//                 </h1>
+//                 <p className="mt-5 text-xl text-gray-500">
+//                   Get immediate assistance from verified professionals for plumbing, electrical, and HVAC emergencies.
+//                 </p>
+//                 <div className="mt-8 flex flex-col sm:flex-row">
+//                   <div className="mb-4 sm:mb-0 sm:mr-4">
+//                     <button
+//                       onClick={handleEmergency}
+//                       disabled={isLoading}
+//                       className={`w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white ${
+//                         isLoading ? 'bg-red-400' : 'bg-red-600 hover:bg-red-700'
+//                       } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 md:py-4 md:text-lg md:px-10`}
+//                     >
+//                       {isLoading ? 'Loading...' : 'Request Emergency Service'}
+//                     </button>
+//                   </div>
+//                   <div>
+//                     <a
+//                       href="#features"
+//                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 md:py-4 md:text-lg md:px-10"
+//                     >
+//                       Learn More
+//                     </a>
+//                   </div>
+//                 </div>
+//               </div>
+//               <div className="flex justify-center">
+//                 <div className="relative w-full h-64 sm:h-72 md:h-96">
+//                   <div className="absolute inset-0 bg-blue-500 rounded-lg shadow-lg transform skew-y-6 sm:skew-y-0 sm:-rotate-6 opacity-25"></div>
+//                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg">
+//                     <div className="absolute inset-0 flex items-center justify-center p-8">
+//                       <div className="max-w-md text-white">
+//                         <h2 className="text-2xl font-bold mb-4">24/7 Emergency Service</h2>
+//                         <ul className="space-y-2">
+//                           <li className="flex items-center">
+//                             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+//                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+//                             </svg>
+//                             Verified Professionals
+//                           </li>
+//                           <li className="flex items-center">
+//                             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+//                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+//                             </svg>
+//                             Secure Blockchain Payments
+//                           </li>
+//                           <li className="flex items-center">
+//                             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+//                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+//                             </svg>
+//                             Quick Response Time
+//                           </li>
+//                           <li className="flex items-center">
+//                             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+//                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+//                             </svg>
+//                             Satisfaction Guaranteed
+//                           </li>
+//                         </ul>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+          
+//           {/* Features Section */}
+//           <div id="features" className="py-12 bg-white rounded-lg shadow-lg">
+//             <div className="max-w-xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+//               <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-8">
+//                 Our Emergency Services
+//               </h2>
+//               <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+//                 <div className="bg-blue-50 rounded-lg p-6 hover:shadow-md transition-shadow">
+//                   <div className="h-12 w-12 rounded-md bg-blue-500 flex items-center justify-center mb-4">
+//                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+//                     </svg>
+//                   </div>
+//                   <h3 className="text-lg font-medium text-gray-900">Electrical</h3>
+//                   <p className="mt-2 text-base text-gray-500">
+//                     From power outages to electrical failures, our certified electricians are available 24/7.
+//                   </p>
+//                 </div>
+                
+//                 <div className="bg-blue-50 rounded-lg p-6 hover:shadow-md transition-shadow">
+//                   <div className="h-12 w-12 rounded-md bg-blue-500 flex items-center justify-center mb-4">
+//                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+//                     </svg>
+//                   </div>
+//                   <h3 className="text-lg font-medium text-gray-900">Plumbing</h3>
+//                   <p className="mt-2 text-base text-gray-500">
+//                     Water leaks, burst pipes, clogged drains - our plumbers are ready to help.
+//                   </p>
+//                 </div>
+                
+//                 <div className="bg-blue-50 rounded-lg p-6 hover:shadow-md transition-shadow">
+//                   <div className="h-12 w-12 rounded-md bg-blue-500 flex items-center justify-center mb-4">
+//                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+//                     </svg>
+//                   </div>
+//                   <h3 className="text-lg font-medium text-gray-900">HVAC</h3>
+//                   <p className="mt-2 text-base text-gray-500">
+//                     Heating or cooling emergencies are handled by our experienced HVAC technicians.
+//                   </p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </main>
+        
+//         {/* Footer */}
+//         <footer className="bg-white py-12 mt-12">
+//           <div className="max-w-7xl mx-auto px-4 overflow-hidden sm:px-6 lg:px-8">
+//             <nav className="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   About
+//                 </a>
+//               </div>
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   Services
+//                 </a>
+//               </div>
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   Pricing
+//                 </a>
+//               </div>
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   Contact
+//                 </a>
+//               </div>
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   Terms & Conditions
+//                 </a>
+//               </div>
+//               <div className="px-5 py-2">
+//                 <a href="#" className="text-base text-gray-500 hover:text-gray-900">
+//                   Privacy
+//                 </a>
+//               </div>
+//             </nav>
+//             <p className="mt-8 text-center text-base text-gray-400">
+//               &copy; 2023 Three Trades & Skills. All rights reserved.
+//             </p>
+//           </div>
+//         </footer>
+//       </div>
+//     </div>
+//   );
+// }
