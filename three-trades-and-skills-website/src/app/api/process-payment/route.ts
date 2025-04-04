@@ -3621,7 +3621,6 @@
 
 
 
-// src/app/api/process-payment/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { SquareClient, SquareEnvironment } from "square";
 import { randomUUID } from "crypto";
@@ -3944,7 +3943,6 @@ export async function POST(request: NextRequest) {
 }
 }
 
-// ... (keep validateUserInfo unchanged)
 
 
 
